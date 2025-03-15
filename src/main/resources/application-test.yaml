@@ -2,63 +2,63 @@ server:
   port: 8080
   host: http://localhost
 
+spring:
   application:
     name: mc-server-app
 
-    docker:
-      compose:
-        enabled: false
+  docker:
+    compose:
+      enabled: false
 
-    jpa:
-      database-platform: org.hibernate.dialect.H2Dialect
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    properties:
       hibernate:
-        ddl-auto: update
-      properties:
-        hibernate:
-          id:
-            new_generator_mappings: true
+        id:
+          new_generator_mappings: true
 
-    datasource:
-      url: jdbc:h2:mem:slyoon-db
-      driverClassName: org.h2.Driver
-      username: sa
-      password: password
+  datasource:
+    url: jdbc:h2:mem:slyoon-db
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
 
-    h2:
-      console:
-        enabled: true
-        path: /h2
+  h2:
+    console:
+      enabled: true
+      path: /h2
 
-    mail:
-      host: smtp.gmail.com
-      port: 587
-      username: user@test.com
-      password: gxzz xqnl wino hucu
-      properties:
-        mail:
-          smtp:
-            auth: true
-            starttls:
-              enable: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: user@test.com
+    password: gxzz xqnl wino hucu
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
-  auth:
-    jwt:
-      secret: defaultsecret@2db32yudu32idm2iu3inf3odm2km3
+auth:
+  jwt:
+    secret: defaultsecret@2db32yudu32idm2iu3inf3odm2km3
 
+verification:
+  cache:
+    expiration-time-sec: 40
+
+account:
   verification:
-    cache:
-      expiration-time-sec: 40
+    subject: Slyoon account verification
+    message: Click the link to verify your account
 
-  account:
-    verification:
-      subject: Slyoon account verification
-      message:
-        Click the link to verify your account:
-
-  twilio:
-    accountSid: YOUR_ACCOUNT_SID
-    authToken: YOUR_AUTH_TOKEN
-    phoneNumber: YOUR_PHONE_NUMBER
+twilio:
+  accountSid: YOUR_ACCOUNT_SID
+  authToken: YOUR_AUTH_TOKEN
+  phoneNumber: YOUR_PHONE_NUMBER
 
   # Database migrations config (Flyway) - Uncomment if needed
   # flyway:
