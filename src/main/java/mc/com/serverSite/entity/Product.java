@@ -6,18 +6,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
 @Entity
-public class Event {
+public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
+    private String name;
     private String description;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
-    private boolean expired;
+    private String[] imagesURLs = new String[5];
+    private Long priceInCents;
+    private String purchaseUrl;
+    private boolean available;
 
 }

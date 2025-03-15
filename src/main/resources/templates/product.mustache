@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{name}} - Premium Product</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/mustache@latest"></script>
+    <script>
+        tailwind.config = {
+          darkMode: 'class',
+          theme: {
+            extend: {
+              colors: {
+                dark: '#121212',
+                darkSecondary: '#1E1E1E',
+                darkTertiary: '#2D2D2D',
+                lightAccent: 'rgba(255, 255, 255, 0.1)',
+              },
+              keyframes: {
+                fadeIn: {
+                  '0%': { opacity: '0' },
+                  '100%': { opacity: '1' },
+                },
+                slideUp: {
+                  '0%': { transform: 'translateY(20px)', opacity: '0' },
+                  '100%': { transform: 'translateY(0)', opacity: '1' },
+                },
+                slideInRight: {
+                  '0%': { transform: 'translateX(20px)', opacity: '0' },
+                  '100%': { transform: 'translateX(0)', opacity: '1' },
+                },
+                imageShimmer: {
+                  '0%': { backgroundPosition: '200% 0' },
+                  '100%': { backgroundPosition: '-200% 0' },
+                }
+              },
+              animation: {
+                fadeIn: 'fadeIn 0.6s ease-out',
+                slideUp: 'slideUp 0.6s ease-out',
+                slideInRight: 'slideInRight 0.6s ease-out',
+                imageShimmer: 'imageShimmer 2s infinite',
+              }
+            }
+          }
+        }
+    </script>
+    <style>
+        /* Custom CSS */
+        .glass-card {
+          backdrop-filter: blur(16px);
+          background-color: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-loading {
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+          background-size: 200% 100%;
+          animation: imageShimmer 2s infinite;
+        }
+
+        .price-tag {
+          position: relative;
+          font-weight: 600;
+          font-size: 1.5rem;
+        }
+
+        .price-tag::before {
+          content: "";
+          position: absolute;
+          bottom: -8px;
+          left: 0;
+          width: 50%;
+          height: 2px;
+          background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes slideImageIn {
+          0% {
+            opacity: 0;
+            transform: scale(1.1);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        .thumbnail {
+          transition: all 0.3s ease;
+        }
+
+        .thumbnail:hover {
+          transform: scale(1.05);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .main-image {
+          animation: slideImageIn 0.8s ease-out forwards;
+        }
+
+        .availability-badge-available {
+          background: linear-gradient(90deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.05));
+          border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .availability-badge-unavailable {
+          background: linear-gradient(90deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.05));
+          border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+          height: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.2);
+          border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-dark text-white min-h-screen">
+<div id="product-template" class="opacity-0">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 min-h-screen flex flex-col">
+        <header class="mb-12 animate-fadeIn">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-light tracking-tight mb-2">{{name}}</h1>
+            <div class="h-px w-20 bg-white/20 mb-4"></div>
+            <div class="flex items-center space-x-4">
+                <div class="{{#available}}availability-badge-available{{/available}}{{^available}}availability-badge-unavailable{{/available}} py-1 px-3 text-sm rounded-full inline-flex items-center space-x-1">
+                    <span class="w-2 h-2 rounded-full {{#available}}bg-green-500{{/available}}{{^available}}bg-red-500{{/available}}"></span>
+                    <span>{{#available}}Available{{/available}}{{^available}}Unavailable{{/available}}</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 flex-grow">
+            <!-- Image gallery -->
+            <div class="animate-slideUp" style="animation-delay: 0.1s">
+                <div class="relative aspect-square overflow-hidden rounded-lg mb-6 bg-darkSecondary image-loading">
+                    <img id="main-image" src="{{imagesURLs.0}}" alt="{{name}}" class="main-image w-full h-full object-cover object-center opacity-0" onload="this.classList.remove('opacity-0')">
+                </div>
+
+                <div class="grid grid-cols-4 gap-4 custom-scrollbar">
+                    {{#imagesURLs}}
+                        <div class="thumbnail aspect-square rounded-lg overflow-hidden cursor-pointer bg-darkSecondary image-loading" onclick="changeMainImage(this.querySelector('img').src)">
+                            <img src="{{.}}" alt="{{name}} thumbnail" class="w-full h-full object-cover object-center opacity-0" onload="this.classList.remove('opacity-0')">
+                        </div>
+                    {{/imagesURLs}}
+                </div>
+            </div>
+
+            <!-- Product details -->
+            <div class="animate-slideInRight" style="animation-delay: 0.2s">
+                <div class="glass-card rounded-xl p-8 h-full flex flex-col">
+                    <div class="flex-grow">
+                        <div class="price-tag mb-8">
+                            ${{formattedPrice}}
+                        </div>
+
+                        <div class="space-y-6 text-gray-300">
+                            <p class="text-lg leading-relaxed">{{description}}</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-8">
+                        {{#available}}
+                            <a href="{{purchaseUrl}}" class="inline-block w-full bg-white text-darkTertiary font-medium py-4 px-6 rounded-lg hover:bg-opacity-90 transition-all duration-300 text-center">
+                                Purchase Now
+                            </a>
+                        {{/available}}
+                        {{^available}}
+                            <button disabled class="inline-block w-full bg-darkTertiary text-white/50 font-medium py-4 px-6 rounded-lg cursor-not-allowed">
+                                Currently Unavailable
+                            </button>
+                        {{/available}}
+
+                        <div class="mt-4 text-sm text-center text-white/40">
+                            Secure checkout • Premium quality • Fast shipping
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Product data - this would normally come from your Java backend
+    const product = {
+      name: "Premium Wireless Headphones",
+      description: "Experience unparalleled sound quality with our flagship wireless headphones. Featuring active noise cancellation, 40-hour battery life, and premium materials for all-day comfort. The perfect blend of audiophile-grade sound and minimalist design.",
+      imagesURLs: [
+        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000",
+        "https://images.unsplash.com/photo-1484704849700-f032a568e944?q=80&w=1000",
+        "https://images.unsplash.com/photo-1546435770-a3e426bf472b?q=80&w=1000",
+        "https://images.unsplash.com/photo-1583394838336-acd977736f90?q=80&w=1000"
+      ],
+      priceInCents: 29900,
+      purchaseUrl: "#purchase",
+      available: true
+    };
+
+    // Format price from cents to dollars
+    function formatPrice(priceInCents) {
+      return (priceInCents / 100).toFixed(2);
+    }
+
+    // Add formatted price to the product object
+    product.formattedPrice = formatPrice(product.priceInCents);
+
+    // Render template with Mustache
+    document.addEventListener('DOMContentLoaded', () => {
+      const template = document.getElementById('product-template').innerHTML;
+      const rendered = Mustache.render(template, product);
+      document.body.innerHTML = rendered;
+
+      // Fade in the content
+      setTimeout(() => {
+        document.body.classList.add('animate-fadeIn');
+      }, 100);
+    });
+
+    // Function to change main image when clicking thumbnails
+    function changeMainImage(src) {
+      const mainImage = document.getElementById('main-image');
+      mainImage.classList.add('opacity-0');
+
+      setTimeout(() => {
+        mainImage.src = src;
+        setTimeout(() => {
+          mainImage.classList.remove('opacity-0');
+        }, 50);
+      }, 300);
+    }
+</script>
+</body>
+</html>
