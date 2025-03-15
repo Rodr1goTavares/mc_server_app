@@ -2,7 +2,7 @@ package mc.com.serverSite.api.dto;
 
 import mc.com.serverSite.entity.Product;
 
-public record ProductDto(
+public record ProductDTO(
         String name,
         String description,
         String[] imagesURLs,
@@ -10,8 +10,8 @@ public record ProductDto(
         String purchaseUrl,
         boolean available
 ) {
-    public static ProductDto toDto(Product product) {
-        return new ProductDto(
+    public static ProductDTO toDto(Product product) {
+        return new ProductDTO(
                 product.getName(),
                 product.getDescription(),
                 product.getImagesURLs(),
