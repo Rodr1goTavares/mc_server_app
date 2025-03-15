@@ -32,7 +32,7 @@ server:
     mail:
       host: smtp.gmail.com
       port: 587
-      username: rodr1gowzxz2@gmail.com
+      username: user@test.com
       password: gxzz xqnl wino hucu
       properties:
         mail:
